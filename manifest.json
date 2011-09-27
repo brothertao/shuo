@@ -6,12 +6,12 @@
       "js": [ "js/jquery.js", "js/script.js" ],
       "matches": [ "http://*/*" ]
    } ],
-   "description": "lj",
+   "description": "shuo is a chrome plugin for comment from ----",
    "icons": {
       "128": "img/icon128.png",
       "48": "img/icon48.png"
    },
-   "name": "AAA",
+   "name": "shuo",
    "permissions": [ "http://reddit.local/*" ],
    "version": "0.11"
 }
