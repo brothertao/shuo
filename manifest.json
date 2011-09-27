@@ -1,0 +1,17 @@
+{
+   "background_page": "background.html",
+   "content_scripts": [ {
+      "css": [ "css/reddit.css" ],
+      "exclude_globs": [ "http://reddit.local/*" ],
+      "js": [ "js/jquery.js", "js/script.js" ],
+      "matches": [ "http://*/*" ]
+   } ],
+   "description": "lj",
+   "icons": {
+      "128": "img/icon128.png",
+      "48": "img/icon48.png"
+   },
+   "name": "AAA",
+   "permissions": [ "http://reddit.local/*" ],
+   "version": "0.11"
+}
