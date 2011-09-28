@@ -31,22 +31,31 @@ function xhrCall(url, callback)
     }
   }
     xhr.send();
-}
+};
 function check_url(url){
   if (/^https?:\/\/chrome\.google\.com\/(extensions|webstore)/i.test(url)) alert(chrome.i18n.getMessage("alertGallery"));
-}
+};
 
 chrome.extension.onRequest.addListener(
   function(request, sender, callback) {
     xhrCall(request.url, callback);
-  });
+});
 
 
 chrome.browserAction.onClicked.addListener(function(tab) {
   check_url(tab.url);
-  chrome.tabs.insertCSS(tab.id, {file: "css/zTreeStyle/zTreeStyle.css"});
-  chrome.tabs.sendRequest(tab.id, 'show')
-  })
+  chrome.tabs.insertCSS(tab.id, {file: "css/zTreeStyle.css"});
+  chrome.tabs.insertCSS(tab.id, {file: "css/jquery-ui-1.8.16.custom.css"});
+  //chrome.tabs.insertCSS(tab.id, {file: "css/zTreeStyle.css"});
+  chrome.tabs.executeScript(tab.id, {file: "js/fix-img-path.js"});
+  chrome.tabs.executeScript(tab.id, {file: "js/ui/jquery.ui.core.js"});
+  chrome.tabs.executeScript(tab.id, {file: "js/ui/jquery.ui.widget.js"});
+  chrome.tabs.executeScript(tab.id, {file: "js/ui/jquery.ui.mouse.js"});
+  chrome.tabs.executeScript(tab.id, {file: "js/ui/jquery.ui.draggable.js"});
+  chrome.tabs.executeScript(tab.id, {file: "js/drag.js"});
+  //chrome.tabs.executeScript(tab.id, {code: $("#dragpannel").draggable({ scroll: true })});
+  chrome.tabs.sendRequest(tab.id, 'show');
+});
 
 
 

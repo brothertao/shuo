@@ -6,7 +6,7 @@
    },
    "content_scripts": [ {
       "exclude_globs": [ "http://reddit.local/*" ],
-      "js": [ "js/jquery.js", "js/jquery.ztree.core-3.0.js", "js/jquery.ztree.excheck-3.0.js", "js/jquery.ztree.exedit-3.0.js", "js/script.js" ],
+      "js": [ "js/jquery-1.6.2.js", "js/jquery.ztree.core-3.0.js", "js/jquery.ztree.excheck-3.0.js", "js/jquery.ztree.exedit-3.0.js", "js/script.js" ],
       "matches": [ "http://*/*" ]
    } ],
    "description": "shuo is a chrome plugin for comment from ----",

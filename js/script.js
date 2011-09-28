@@ -11,7 +11,7 @@ function build_view() {
 		var setting = {
 			async: {
 				enable: true,
-				url:"../asyncData/getNodes.php",
+				url:"http://localhost/ztree/demo/asyncData/getNodes.php",
 				autoParam:["id", "name=n"],
 				otherParam:{"otherParam":"zTreeAsyncTest"},
 				dataFilter: filter
@@ -75,14 +75,16 @@ function build_view() {
 			$("#addBtn_"+treeNode.id).unbind().remove();
 		};
   var RedditEmbed = $("<div />").attr({
-    'id': 'RedditEmbed'
+    'id': 'RedditEmbed',
+    "class": "ui-widget-content ui-draggable"
   });
+  RedditEmbed.append('<p class="ui-widget-header">Drag me around</p>');
   var cTree = $("<ul>").attr({'id':'ctree', 'class': 'ztree'});
   RedditEmbed.append(cTree);
   $('body').append(RedditEmbed);
   $.fn.zTree.init($("#ctree"), setting);
   console.log('finish build view');
-}
+};
 
 
 
@@ -93,7 +95,7 @@ function toggleElement(elemName) {
     return;
   }
   element.style.display = 'none';
-}
+};
 function createPanel(panelTitle, HNurl) {
     console.log(HNurl);
   var RedditSite = $("<iframe />").attr({
@@ -156,7 +158,7 @@ function createPanel(panelTitle, HNurl) {
   RedditEmbed.hide();
   $('body').append(RedditTab);
   $('body').append(RedditEmbed);
-}
+};
 function cuttoff(date, points) {
   var difference = new Date() - new Date(date);
   var months = difference / (1000 * 60 * 60 * 24 * 30);
@@ -165,4 +167,4 @@ function cuttoff(date, points) {
   } else {
     return true;
   }
-}
+};
