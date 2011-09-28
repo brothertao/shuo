@@ -1,9 +1,12 @@
 {
    "background_page": "background.html",
+   "browser_action": {
+      "default_icon": "img/icon48.png",
+      "default_title": "__MSG_browserActionDefaultTitle__"
+   },
    "content_scripts": [ {
-      "css": [ "css/reddit.css" ],
       "exclude_globs": [ "http://reddit.local/*" ],
-      "js": [ "js/jquery.js", "js/script.js" ],
+      "js": [ "js/jquery.js", "js/jquery.ztree.core-3.0.js", "js/jquery.ztree.excheck-3.0.js", "js/jquery.ztree.exedit-3.0.js", "js/script.js" ],
       "matches": [ "http://*/*" ]
    } ],
    "description": "shuo is a chrome plugin for comment from ----",
@@ -12,6 +15,6 @@
       "48": "img/icon48.png"
    },
    "name": "shuo",
-   "permissions": [ "http://reddit.local/*" ],
+   "permissions": [ "http://reddit.local/*", "tabs", "*://*/*" ],
    "version": "0.11"
 }

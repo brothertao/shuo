@@ -32,11 +32,24 @@ function xhrCall(url, callback)
   }
     xhr.send();
 }
+function check_url(url){
+  if (/^https?:\/\/chrome\.google\.com\/(extensions|webstore)/i.test(url)) alert(chrome.i18n.getMessage("alertGallery"));
+}
 
 chrome.extension.onRequest.addListener(
   function(request, sender, callback) {
     xhrCall(request.url, callback);
   });
+
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+  check_url(tab.url);
+  chrome.tabs.insertCSS(tab.id, {file: "css/zTreeStyle/zTreeStyle.css"});
+  chrome.tabs.sendRequest(tab.id, 'show')
+  })
+
+
+
     </script>
   </body>
 </html>
