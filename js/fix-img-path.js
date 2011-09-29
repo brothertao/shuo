@@ -20,7 +20,7 @@ $(function() {
       if (b2 && (s2 = b2.indexOf(lookfor)) >= 0) {
         s2 = s2 + lookfor.length;
         rules[j].style['background'] = b2.replace(b2.substr(s, b2.indexOf(folder) - s2), path_prefix);
-        console.log(rules[j].style['background']);
+        //console.log(rules[j].style['background']);
       }
     }
   };
