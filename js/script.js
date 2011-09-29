@@ -1,7 +1,7 @@
 chrome.extension.onRequest.addListener(function(action, sender, sendResponse) {
   console.log(action);
   if ('show' === action) {
-    //get_comments();
+    get_comments();
     build_view();
   }
   if ($("#RedditEmbed").length > 0) {
@@ -10,11 +10,15 @@ chrome.extension.onRequest.addListener(function(action, sender, sendResponse) {
     $(function () {$( "#RedditEmbed" ).draggable({handle: "p"});});
   }
 });
+function get_comments() {
+  url = "http://reddit.local/r/reddit_test0/comments/2y/indextank.json";
+  cur_path = "http://code.reddit.com/wiki/HowTo#Indexingreddit";
+  query_url = "http://reddit.local/search.json?sort=top&q=url:" + escape(cur_path);
+  $.get(query_url, function(result) { console.log(result.data.modhash); });
+  $.get(url, function(result) { console.log(result); });
+}
 function build_view() {
-  if ($("#RedditEmbed").length > 0) {
-    $("#RedditEmbed").hide();
-    return;
-  }
+  //TODO:在次点击时候，关闭面板
 
 		var setting = {
 			async: {
