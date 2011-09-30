@@ -1,11 +1,16 @@
+var zNodes = [];
 chrome.extension.onRequest.addListener(function(action, sender, sendResponse) {
-  console.log(action);
+  console.log('action');
+  console.log('action: '+action.toString());
   if ('show' === action) {
     if ($("#RedditEmbed").length<1) {
       get_comments();
-      build_view();
+      me_info();
+      setTimeout("build_view()", 10000);
+      //build_view();
     }
-    $("#RedditEmbed").show();
+    setTimeout("$('#RedditEmbed').show()", 11000);
+    //$("#RedditEmbed").show();
   } else if ('hide' === action) {
     $("#RedditEmbed").hide();
   }
@@ -18,16 +23,11 @@ chrome.extension.onRequest.addListener(function(action, sender, sendResponse) {
   }
 });
 function get_comments() {
-  //permalink = "http://reddit.local/r/reddit_test0/comments/2y/indextank.json";
-  //cur_path = "http://code.reddit.com/wiki/HowTo#Indexingreddit";
   query_url = "http://reddit.local/search.json?sort=top&q=url:" + escape(window.location.href);
-  //console.log(query_url);
   $.get(query_url, function(result) {
     permalink = 'http://reddit.local' + result.data.children[0].data.permalink + '.json';
-    //console.log(permalink);
     $.get(permalink, function(result) {
       //console.log(result);注意此处的数据结构，此数组共有两个Object，第一个是，第二个是评论数据
-      zNodes = [];
       obj2node(result[1]);
       console.log('total comments:'+zNodes.length.toString());
     });
@@ -37,7 +37,7 @@ function obj2node(data) {
   for(var i=0; i<data.data.children.length; i++) {
     node = {
       id: data.data.children[i].data.id,
-      pid: data.data.children[i].data.parent_id,
+      pId: data.data.children[i].data.parent_id,
       name: data.data.children[i].data.body,
       open: true
     };
@@ -49,18 +49,19 @@ function obj2node(data) {
     }
   }
 }
+function me_info() {
+  var url = "http://reddit.local/api/me.json";
+  console.log(url);
+  $.get(url, 
+      function(result) {
+        console.log('result');
+        console.log(result);
+      }
+  );
+}
 function build_view() {
   //TODO:在次点击时候，关闭面板
   var setting = {
-    async: {
-      enable: true,
-      url: "http://localhost/ztree/demo/asyncData/getNodes.php",
-      autoParam: ["id", "name=n"],
-      otherParam: {
-        "otherParam": "zTreeAsyncTest"
-      },
-      dataFilter: filter
-    },
     view: {
       expandSpeed: "",
       addHoverDom: addHoverDom,
@@ -134,7 +135,8 @@ function build_view() {
   });
   RedditEmbed.append(cTree);
   RedditEmbed.hide();
-  $('body').append(RedditEmbed);
-  $.fn.zTree.init($("#ctree"), setting);
+  $('html').append(RedditEmbed);
+  console.log(zNodes);
+  $.fn.zTree.init($("#ctree"), setting, zNodes);
   console.log('finish build view');
 };

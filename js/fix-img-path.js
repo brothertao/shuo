@@ -1,9 +1,8 @@
 $(function() {
-  console.log('path_prefix');
   function fixcsspath(rules, folder) {
     var path_prefix = chrome.extension.getURL('') + 'css/';
-    console.log('path_prefix');
-    console.log(path_prefix);
+    //console.log('path_prefix');
+    //console.log(path_prefix);
     var lookfor = 'url(';
     var ss = document.styleSheets;
 
