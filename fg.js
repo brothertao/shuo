@@ -2,20 +2,21 @@ var zNodes = [];
 chrome.extension.onRequest.addListener(function(action, sender, sendResponse) {
   console.log('action: '+action.toString());
   if ('show' === action) {
-    if ($("#RedditEmbed").length<1) {
+    if ($("#ViewFrame").length<1) {
       //get_comments();
+      //check_login();
+      //login('reddit', 'qwe123');
       //me_info();
-      //setTimeout("build_view()", 10000);
+      //comment();
       build_view();
     }
-    //setTimeout("$('#RedditEmbed').show()", 11000);
-    $("#RedditEmbed").show();
+    $("#ViewFrame").show();
   } else if ('hide' === action) {
-    $("#RedditEmbed").hide();
+    $("#ViewFrame").hide();
   }
-  if ($("#RedditEmbed").length > 0) {
+  if ($("#ViewFrame").length > 0) {
     $(function() {
-      $("#RedditEmbed").draggable({
+      $("#ViewFrame").draggable({
         handle: "p"
       });
     });
@@ -48,19 +49,47 @@ function obj2node(data) {
     }
   }
 }
+function login(username, password) {
+  var url = "http://reddit.local/api/login/" + username;
+  console.log(url);
+  $.ajax({
+    type: 'POST',
+    url: url,
+    data: 'api_type=json&user=' + username + '&passwd=' + password,
+    success: 
+      function(result) {
+        console.log(result);
+      },
+    dataType: 'json'
+  });
+}
 function me_info() {
   var url = "http://reddit.local/api/me.json";
-  console.log(url);
   $.get(url, 
       function(result) {
-        console.log('result');
+        $('#user_name').text(result.data.name);
+        console.log('user info:');
         console.log(result);
       }
   );
 }
+function check_login() {
+  var url = "http://reddit.local/api/me.json";
+  $.get(url, 
+      function(result) {
+        if (result.data) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+  );
+}
 function build_view() {
-  //TODO:在次点击时候，关闭面板
   var setting = {
+    edit: {
+      enable: true
+    },
     async: {
       enable: true,
       type: 'get',
@@ -95,19 +124,51 @@ function build_view() {
     filter1(treeId, nodes, childNodes);
     return nodes;
   }
-  var RedditEmbed = $("<div />").attr({
-    'id': 'RedditEmbed',
+  var ViewFrame = $("<div />").attr({
+    'id': 'ViewFrame',
     "class": "ui-widget-content ui-draggable"
   });
-  RedditEmbed.append('<p class="ui-widget-header">Drag me around</p>');
+  ViewFrame.append('<p class="ui-widget-header">Drag me around</p>');
+  ViewFrame.append('<span id="user_name" class="user_name">username</span>');
   var cTree = $("<ul></ul>").attr({
     'id': 'ctree',
     'class': 'ztree'
   });
-  RedditEmbed.append(cTree);
-  RedditEmbed.hide();
-  $('html').append(RedditEmbed);
+  ViewFrame.append(cTree);
+  ViewFrame.hide();
+  $('html').append(ViewFrame);
+  me_info();
   console.log(zNodes);
   $.fn.zTree.init($("#ctree"), setting);
   console.log('finish build view');
 };
+function submit_link() {
+  var url = "http://reddit.local/api/submit";
+  console.log(url);
+  $.ajax({
+    type: 'POST',
+    url: url,
+    //将下面转为动态
+    data: 'uh=reddit&kind=link&url=yourlink1.com&text=哈哈&sr=reddit_test0&title=omg-look-at-this&r=reddit_test0',
+    success: 
+      function(result) {
+        console.log(result);
+      },
+    dataType: 'json'
+  });
+}
+function comment() {
+  var url = "http://reddit.local/api/comment";
+  console.log(url);
+  $.ajax({
+    type: 'POST',
+    url: url,
+    //将下面转为动态
+    data: 'uh=reddit&thing_id=t6_30&text=哈哈',
+    success: 
+      function(result) {
+        console.log(result);
+      },
+    dataType: 'json'
+  });
+}

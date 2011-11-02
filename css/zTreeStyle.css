@@ -7,15 +7,13 @@ email:		hunter.z@263.net
 website:	http://code.google.com/p/jquerytree/
 
 -------------------------------------*/
-#chrome-extention-relative-paths {}
-#RedditEmbed {
+#ViewFrame{
     opacity:1;
     -webkit-mask-image:-webkit-gradient(linear, 0% 0%, 100% 0%, from(rgb(0, 0, 0)), to(rgb(255, 255, 255)));
     border-top-width:0px;
     border-right-width:0px;
     border-bottom-width:0px;
-    width:468px;
-    height:254px;
+    width:230px;
     background-color:rgba(124, 145, 118, 0.957031);
     padding: 0 5px 5px;
     position: fixed;

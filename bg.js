@@ -36,7 +36,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     //styles
     chrome.tabs.insertCSS(id, {file: "css/zTreeStyle.css"});
     chrome.tabs.insertCSS(id, {file: "css/demo.css"});
-    //chrome.tabs.insertCSS(id, {file: "css/jquery-ui-1.8.16.custom.css"});
+    chrome.tabs.insertCSS(id, {file: "css/jquery-ui-1.8.16.custom.css"});
 
     //js
     //chrome.tabs.executeScript(id, {file: "js/jquery-1.6.2.js"});
