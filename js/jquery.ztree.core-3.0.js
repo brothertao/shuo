@@ -806,7 +806,9 @@
           html.push("<a id='", node.tId, consts.id.A, "' class='level", node.level,"' treeNode", consts.id.A," onclick=\"", (node.click || ''),
             "\" ", ((url != null && url.length > 0) ? "href='" + url + "'" : ""), " target='",view.makeNodeTarget(node),"' style='", fontStyle.join(''),
             "'");
-          if (tools.apply(setting.view.showTitle, [setting.treeId, node], setting.view.showTitle)) {html.push("title='", node[titleKey].replace(/'/g,"&#39;"),"'");}
+          if (tools.apply(setting.view.showTitle, [setting.treeId, node], setting.view.showTitle)) {
+            html.push("title='", node[titleKey].replace(/'/g,"&#39;"),"'");
+          }
           html.push(">");
           data.getInnerBeforeA(setting, node, html);
           html.push("<button type='button' id='", node.tId, consts.id.ICON,

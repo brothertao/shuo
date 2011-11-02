@@ -1,7 +1,7 @@
-$(function() {
+(function() {
   function fixcsspath(rules, folder) {
     var path_prefix = chrome.extension.getURL('') + 'css/';
-    //console.log('path_prefix');
+    console.log('path_prefix');
     //console.log(path_prefix);
     var lookfor = 'url(';
     var ss = document.styleSheets;
@@ -19,17 +19,19 @@ $(function() {
       if (b2 && (s2 = b2.indexOf(lookfor)) >= 0) {
         s2 = s2 + lookfor.length;
         rules[j].style['background'] = b2.replace(b2.substr(s, b2.indexOf(folder) - s2), path_prefix);
-        //console.log(rules[j].style['background']);
+        console.log(rules[j].style['background']);
       }
     }
-  };
+  }
+  console.log('start fix the path');
 
   var ss = document.styleSheets;
+  console.log(ss);
+  console.log('styleSheets length:' + ss.length);
 
   for (var i = 0; i < ss.length; i++) {
     var rules = ss[i].rules || ss[i].cssRules;
     if (rules[0].selectorText != "#chrome-extention-relative-paths") continue;
     fixcsspath(ss[i].rules, 'images/');
   }
-});
-
+})();

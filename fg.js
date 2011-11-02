@@ -1,16 +1,15 @@
 var zNodes = [];
 chrome.extension.onRequest.addListener(function(action, sender, sendResponse) {
-  console.log('action');
   console.log('action: '+action.toString());
   if ('show' === action) {
     if ($("#RedditEmbed").length<1) {
-      get_comments();
-      me_info();
-      setTimeout("build_view()", 10000);
-      //build_view();
+      //get_comments();
+      //me_info();
+      //setTimeout("build_view()", 10000);
+      build_view();
     }
-    setTimeout("$('#RedditEmbed').show()", 11000);
-    //$("#RedditEmbed").show();
+    //setTimeout("$('#RedditEmbed').show()", 11000);
+    $("#RedditEmbed").show();
   } else if ('hide' === action) {
     $("#RedditEmbed").hide();
   }
@@ -62,68 +61,40 @@ function me_info() {
 function build_view() {
   //TODO:在次点击时候，关闭面板
   var setting = {
-    view: {
-      expandSpeed: "",
-      addHoverDom: addHoverDom,
-      removeHoverDom: removeHoverDom,
-      selectedMulti: false
-    },
-    edit: {
-      enable: true
+    async: {
+      enable: true,
+      type: 'get',
+      dataType: 'json',
+      url:"http://reddit.local/r/reddit_test0/comments/30/local_test/.json",
+      dataFilter: filter
     },
     data: {
-      simpleData: {
-        enable: true
+      key: {
+        name: "body",
+        childs: "childs",
+        title: "body"
       }
-    },
-    callback: {
-      beforeAsync: beforeAsync,
-      beforeRemove: beforeRemove,
-      beforeRename: beforeRename
     }
   };
-  function filter(treeId, parentNode, childNodes) {
-    if (!childNodes) return null;
-    for (var i = 0, l = childNodes.length; i < l; i++) {
-      childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
-    }
-    return childNodes;
-  }
-  function beforeAsync(treeId, treeNode) {
-    return treeNode ? treeNode.level < 5: true;
-  }
-  function beforeRemove(treeId, treeNode) {
-    var zTree = $.fn.zTree.getZTreeObj("ctree");
-    zTree.selectNode(treeNode);
-    return confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
-  }
-  function beforeRename(treeId, treeNode, newName) {
-    if (newName.length == 0) {
-      alert("节点名称不能为空.");
-      return false;
-    }
-    return true;
-  }
 
-  var newCount = 1;
-  function addHoverDom(treeId, treeNode) {
-    var sObj = $("#" + treeNode.tId + "_span");
-    if ($("#addBtn_" + treeNode.id).length > 0) return;
-    var addStr = "<button type='button' class='add2' id='addBtn_" + treeNode.id + "' title='add node' onfocus='this.blur();'></button>";
-    sObj.append(addStr);
-    var btn = $("#addBtn_" + treeNode.id);
-    if (btn) btn.bind("click", function() {
-      var zTree = $.fn.zTree.getZTreeObj("ctree");
-      zTree.addNodes(treeNode, {
-        id: (100 + newCount),
-        pId: treeNode.id,
-        name: "new node" + (newCount++)
-      });
-    });
-  };
-  function removeHoverDom(treeId, treeNode) {
-    $("#addBtn_" + treeNode.id).unbind().remove();
-  };
+  function filter(treeId, parentNode, childNodes) {
+    var childNodes = childNodes[1];
+    var nodes = [];
+
+    function filter1(treeId, parentNode, childNodes) {
+      if (!childNodes) return null;
+      var tmpNodes = childNodes.data.children;
+      for (var i=0, l=tmpNodes.length; i<l; i++) {
+        parentNode[i] = tmpNodes[i].data;
+        if (parentNode[i]['replies'] && parentNode[i]['replies'].data.children.length != 0) {
+          parentNode[i]['childs']= new Array();
+          filter1(treeId, parentNode[i]['childs'], tmpNodes[i].data['replies']);
+        }
+      }
+    }
+    filter1(treeId, nodes, childNodes);
+    return nodes;
+  }
   var RedditEmbed = $("<div />").attr({
     'id': 'RedditEmbed',
     "class": "ui-widget-content ui-draggable"
@@ -137,6 +108,6 @@ function build_view() {
   RedditEmbed.hide();
   $('html').append(RedditEmbed);
   console.log(zNodes);
-  $.fn.zTree.init($("#ctree"), setting, zNodes);
+  $.fn.zTree.init($("#ctree"), setting);
   console.log('finish build view');
 };
