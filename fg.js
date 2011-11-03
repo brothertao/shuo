@@ -97,15 +97,53 @@ function build_view() {
       url:"http://reddit.local/r/reddit_test0/comments/30/local_test/.json",
       dataFilter: filter
     },
+    callback: {
+      beforeRename: beforeRename,
+    },
     data: {
       key: {
         name: "body",
         childs: "childs",
         title: "body"
       }
+    },
+    view: {
+      addHoverDom: addHoverDom,
+      removeHoverDom: removeHoverDom,
+      selectedMulti: false
     }
   };
 
+  function beforeRename(treeId, treeNode, newName) {
+    if (newName.length == 0) {
+      alert("节点名称不能为空.");
+      return false;
+    }
+    return true;
+  }
+  var newCount = 1;
+  function addHoverDom(treeId, treeNode) {
+    var sObj = $("#" + treeNode.tId + "_span");
+    if ($("#addBtn_"+treeNode.id).length>0) return;
+    if ($("#cancelBtn_"+treeNode.id).length>0) return;
+    var addStr = "<button type='button' class='add' id='addBtn_" + treeNode.id
+      + "' title='reply' onfocus='this.blur();'></button>";
+    sObj.append(addStr);
+    var btn = $("#addBtn_"+treeNode.id);
+    if (btn) btn.bind("click", function(){
+      var zTree = $.fn.zTree.getZTreeObj("ctree");
+      zTree.addNodes(treeNode, 
+        {
+          id:('c_'+ newCount++), 
+          pId:treeNode.id,
+          body: 'Please enter ...'
+        }
+      );
+    });
+  };
+  function removeHoverDom(treeId, treeNode) {
+    $("#addBtn_"+treeNode.id).unbind().remove();
+  };
   function filter(treeId, parentNode, childNodes) {
     var childNodes = childNodes[1];
     var nodes = [];
