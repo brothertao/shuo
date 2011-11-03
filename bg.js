@@ -1,3 +1,17 @@
+var isLogin = false;
+var msg = {
+  isLogin: false,
+  user_info:{
+    name: null,
+    modhash: null
+  }
+};
+check_login(msg);
+//跨域请求  代理模式
+chrome.extension.onRequest.addListener(
+  function(request, sender, callback) {
+    xhrCall(request.url, callback);
+});
 function xhrCall(url, callback)
 {
   var xhr = new XMLHttpRequest();
@@ -10,6 +24,7 @@ function xhrCall(url, callback)
   }
     xhr.send();
 };
+
 function check_url(url){
   if (/^https?:\/\/chrome\.google\.com\/(extensions|webstore)/i.test(url)) {
     alert(chrome.i18n.getMessage("alertGallery"));
@@ -19,10 +34,6 @@ function check_url(url){
   }
 };
 
-chrome.extension.onRequest.addListener(
-  function(request, sender, callback) {
-    xhrCall(request.url, callback);
-});
 
 //TODO:增加快捷键
 var on = {}, has_insert = {};
@@ -55,10 +66,12 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     has_insert[id] = true;
   } else {}
   if(!on[id]) {
-    chrome.tabs.sendRequest(id, 'show');
+    msg.show = true;
+    chrome.tabs.sendRequest(id, msg);
     on[id] = true;
   } else {
-    chrome.tabs.sendRequest(id, 'hide');
+    msg.show = false;
+    chrome.tabs.sendRequest(id, msg);
     on[id] = false;
   }
 });
